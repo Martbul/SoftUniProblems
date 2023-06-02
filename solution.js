@@ -1,30 +1,47 @@
-function solve() {
-  let CAMEL_CASE = 'Camel Case';
-  let PASCAL_CASE = 'Pascal Case';
-  let textInput = document.getElementById("text").value.toLowerCase();
-  let currentText = document.getElementById("naming-convention").value;
- const result =  document.getElementById("result");
+function attachEventsListeners() {
+const RATIOS = {
+    days:1,
+    hours:24,
+    minutes:1440,
+    seconds: 86400,
+};
 
- if(currentText !== CAMEL_CASE && currentText !== PASCAL_CASE){
-result.textContent = "Error"
-  return;
+function convert(value, unit){
+    const inDays = value / RATIOS[unit];
 
- } 
-
-
- let arrOfStr = textInput.split(" ");
-let outputPoint ="";
-let startingPoint = 0;
-if(currentText === CAMEL_CASE){
-  outputPoint += arrOfStr[0]
-  startingPoint = 1;
+    return{
+        days: inDays,
+        hours: inDays * RATIOS.hours,
+        minutes: inDays * RATIOS.minutes,
+        seconds: inDays * RATIOS.seconds,
+    }
 }
 
 
-for(let i = startingPoint; i < arrOfStr.length; i++){
-  outputPoint += arrOfStr[i][0].toUpperCase() + arrOfStr[i].slice(1, arrOfStr.length);
+
+const daysInput = document.getElementById('days')
+const hoursInput = document.getElementById('hours')
+const minutesInput = document.getElementById('minutes')
+const secondsInput = document.getElementById('seconds')
 
 
-  result.textContent = outputPoint
+document.querySelector('main').addEventListener('click', onConvert)
+
+
+function onConvert(e){
+
+    if(e.target.tagName === "INPUT" && e.target.type == "button"){
+        const input = e.target.parentElement.querySelector('input[type = "text"]')
+
+
+        const inputValue = Number(input.value);
+        const time = convert(inputValue, input.id);
+        daysInput.value = time.days;
+        hoursInput.value = time.hours;
+        minutesInput.value = time.minutes;
+        secondsInput.value = time.seconds;
+ 
+
+    }
 }
 }
