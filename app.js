@@ -1,18 +1,38 @@
+function lockedProfile() {
+   const SHOW_MORE = 'Show more';
+   const HIDE_IT = 'Hide it';
 
-function addItem() {
-   let newElement = document.getElementById("newItemText").value;
-   let list = document.getElementById("items");
-   if (newElement.length === 0) return;
-   let listItem = document.createElement("li");
-   listItem.textContent = newElement;
-   let remove = document.createElement("a");
-   let linkText = document.createTextNode("[Delete]");
-   remove.appendChild(linkText);
-remove.href = "#";
-remove.addEventListener("click", deleteItem);
-listItem.appendChild(remove);
-list.appendChild(listItem);
-function deleteItem() {
-listItem.remove();
-}
+   const buttonElements = Array.from(document.querySelectorAll('div button'))
+
+   for (const btn of buttonElements) {
+    btn.addEventListener('click',show)
+    
+   }
+
+   function show(e){
+    const divChildren = Array.from(e.target.parentElement.children);
+    const isLocked = divChildren[2].checked;
+
+
+    if(isLocked){
+        return;
+    }else{
+
+        const hiddenFieldElements= e.target.previousElementSibling;
+
+
+        if(e.target.textContent === SHOW_MORE){
+            hiddenFieldElements.style.display = 'inline';
+            e.target.textContent = HIDE_IT
+            return	;
+
+        }else{
+
+
+             hiddenFieldElements.style.display = '';
+             e.target.textContent = SHOW_MORE
+        }
+    }
+    }
+   
 }
