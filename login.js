@@ -1,67 +1,51 @@
-console.log('TODO:// Implement Login functionality');
+import { homePage } from "./home.js"
+import { showView, updateNavBar } from "./utils.js"
 
-function login(){
-    const accessToken = sessionStorage.getItem('accessToken');
-    
-    if(accessToken){
-    
-        document.getElementById('logout').style.display = 'inline';
-    }else{
-     
-        document.getElementById('logout').style.display = 'none';
-    }
+const section = document.getElementById('form-login')
 
+const form = section.querySelector('form')
 
-    const BtnElem = document.querySelector('button')
-    const formElement = document.querySelector('form') 
-    const notificationParagraphElement = document.getElementsByClassName('notification')[0]
+form.addEventListener('submit', onSubmit)
 
-    BtnElem.addEventListener('click', onLogin)
+export function loginPage(){
 
-
-    async function onLogin(){
-        const formData = new FormData(formElement)
-        const email = formData.get('email')
-        const password = formData.get('password')
-
-
-        if(!email){
-            notificationParagraphElement.textContent = 'Email is required!'
-          }else if(!password){
-            notificationParagraphElement.textContent = 'Password is required!'
-        }
-           
-        
-        if(email && password && rePass){
-
-            try{
-                const response = await fetch('http://localhost:3030/users/login',{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body:JSON.stringify({
-                        email ,password
-                    })
-                })
-                if(!response.ok){
-                    const err = new Error(response.statusText)
-                    throw err;
-                }
-    
-                const data = await response.json()
-                
-                sessionStorage.setItem('accessToken', data.accessToken)
-                sessionStorage.setItem('loggedUser', data.email)
-                sessionStorage.setItem('id', data._id)
-    
-                window.location = 'index.html'
-                
-            }catch(err){
-                notificationParagraphElement.textContent = err.message
-            }
-          }
-    }
+   showView(section)
 }
 
-login()
+async function onSubmit(e){
+
+    e.preventDefault()
+
+    const formData = new FormData(form)
+
+    const email = formData.get('email')
+    const password = formData.get('password')
+
+
+    await login(email, password)
+
+    form.reset
+    updateNavBar()
+    homePage()
+}
+
+async function login(email,password){
+    
+    try{
+        const result = await fetch('http://localhost:3030/users/login',{
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({email,password})
+        })
+
+        if(!result.ok){
+            throw new Error(res.statusText)
+        }
+
+        const user = await result.json()
+
+        sessionStorage.setItem('user', JSON.stringify(user))
+    }catch(err){
+        alert(err.message)
+    }
+}

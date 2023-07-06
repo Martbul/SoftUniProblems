@@ -1,25 +1,34 @@
-import { showCatalog } from "./catalogPage.js";
-import { showCreateRecipe } from "./createRecipePage.js";
-import { showLogin } from "./loginPage.js";
-import { logout } from "./logout.js";
-import { showRegister } from "./registerPage.js";
 
-const main = document.querySelector('main');
+//-login (login action) => login page
+// -register (register action) => register page
 
-main.innerHTML = '';
+import { homePage } from "./home.js";
+import { loginPage } from "./login.js";
+import { registerPage } from "./register.js";
+import { updateNavBar } from "./utils.js";
+import {logout} from  "./logout.js";
+// -
+const routes = {
+    '/':homePage,
+    '/login': loginPage,
+    '/register': registerPage,
+    '/logout': logout,
+}
+document.querySelector('nav').addEventListener('click', onNavigate);
 
-let links = {
-    catalogLink: document.getElementById('catalogLink'),
-    createPageLink: document.getElementById('createRecipeLink'),
-    loginLink: document.getElementById('loginLink'),
-    registerLink: document.getElementById('registerLink'),
-    logoutLink: document.getElementById('logoutBtn')
+function onNavigate(e) {
+if(e.target.tagName === 'A' && e.target.href){
+
+    e.preventDefault();
+
+    
+
+    const url = new URL(e.target.href)
+    const view = routes[url.pathname]
+
+    view()
+}
 }
 
-links.catalogLink.addEventListener('click', () => showCatalog(main));
-links.createPageLink.addEventListener('click', () => showCreateRecipe(main));
-links.loginLink.addEventListener('click', () => showLogin(main));
-links.registerLink.addEventListener('click', () => showRegister(main));
-links.logoutLink.addEventListener('click', () => logout(main));
-
-showCatalog(main);
+updateNavBar()
+homePage()
