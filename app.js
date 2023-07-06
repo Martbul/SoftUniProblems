@@ -1,43 +1,25 @@
-function app() {
-    const accessToken = sessionStorage.getItem('accessToken');
-    const loggedUserEmail = sessionStorage.getItem('loggedUser');
+import { showCatalog } from "./catalogPage.js";
+import { showCreateRecipe } from "./createRecipePage.js";
+import { showLogin } from "./loginPage.js";
+import { logout } from "./logout.js";
+import { showRegister } from "./registerPage.js";
 
-    if (loggedUserEmail) {
-        document.querySelector('span').textContent = loggedUserEmail
-    } else {
-        document.querySelector('span').textContent = 'Guest'
-    }
+const main = document.querySelector('main');
 
-    if (accessToken) {
-        document.getElementById('login').style.display = "none"
-        document.getElementById('register').style.display = 'none';
+main.innerHTML = '';
 
-        document.getElementById('logout').style.display = 'inline';
-    } else {
-        document.getElementById('login').style.display = "inline"
-        document.getElementById('register').style.display = 'inline';
-
-        document.getElementById('logout').style.display = 'none';
-    }
-
-    document.getElementById('logout').addEventListener('click',onLogout)
-
-    async function onLogout(){
-        await fetch('http://localhost:3030/users/logout',{
-            method: 'GET',
-            headers:{
-                'X-Authorization':accessToken
-            },
-        })
-
-        sessionStorage.removeItem('accessToken')
-        sessionStorage.removeItem('loggedUser')
-        sessionStorage.removeItem('id')
-
-        window.location= 'index.html'
-    }
-
-    document.getElementById('')
+let links = {
+    catalogLink: document.getElementById('catalogLink'),
+    createPageLink: document.getElementById('createRecipeLink'),
+    loginLink: document.getElementById('loginLink'),
+    registerLink: document.getElementById('registerLink'),
+    logoutLink: document.getElementById('logoutBtn')
 }
 
-app()
+links.catalogLink.addEventListener('click', () => showCatalog(main));
+links.createPageLink.addEventListener('click', () => showCreateRecipe(main));
+links.loginLink.addEventListener('click', () => showLogin(main));
+links.registerLink.addEventListener('click', () => showRegister(main));
+links.logoutLink.addEventListener('click', () => logout(main));
+
+showCatalog(main);
