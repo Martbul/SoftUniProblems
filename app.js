@@ -1,34 +1,46 @@
+import { contacts } from "./contacts.js";
+import {styleMap} from './node_modules/lit-html/directives/style-map.js'
+import {repeat} from './node_modules/lit-html/directives/repeat.js';
+import { html, render } from "./node_modules/lit-html/lit-html.js";
 
-//-login (login action) => login page
-// -register (register action) => register page
+let main = document.getElementById('contacts')
 
-import { homePage } from "./home.js";
-import { loginPage } from "./login.js";
-import { registerPage } from "./register.js";
-import { updateNavBar } from "./utils.js";
-import {logout} from  "./logout.js";
-// -
-const routes = {
-    '/':homePage,
-    '/login': loginPage,
-    '/register': registerPage,
-    '/logout': logout,
-}
-document.querySelector('nav').addEventListener('click', onNavigate);
-
-function onNavigate(e) {
-if(e.target.tagName === 'A' && e.target.href){
-
-    e.preventDefault();
-
-    
-
-    const url = new URL(e.target.href)
-    const view = routes[url.pathname]
-
-    view()
-}
+let contactTemplate = (contact, detailsHandler) => {
+    let styles = {'background-color':'blue', padding:'10px'}
+    return html`
+<div class="contact card">
+<div>
+    <i class="far fa-user-circle gravatar"></i>
+</div>
+<div class="info">
+    <h2 >Name: ${contact.name}</h2>
+    <button class="detailsBtn" @click=${(e) => detailsHandler(e,contact.name)}>Details</button>
+    <div class="details" id="${contact.id}">
+        <p>Phone number: ${contact.phoneNumber}</p>
+        <p>Email: ${contact.email}</p>
+    </div>
+</div>
+</div>
+`;
 }
 
-updateNavBar()
-homePage()
+let contactsTemplate = (contacts, detailsHandler) => html`
+
+<main>
+    ${      contacts.length > 0
+         ? repeat (contacts,(c => c.id) , (c, index) => contactsTemplate(c))
+            : html`<div>No Content </div >`
+        }
+    }
+
+</main>
+`
+    render(contactsTemplate(contacts, detailsHandler), main)
+
+
+    function detailsHandler(e, name){
+        console.log(name)
+        let element = e.target
+        let details = element.parentElement.querySelector('.details')
+        details.classList.toggle('hiden')
+    }
