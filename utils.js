@@ -1,38 +1,38 @@
-export function showView(section){
-    document.querySelectorAll('.view-section')
-    .forEach((s) => s.style.display = 'none');
 
+export const getUserData = () =>{
+   if(sessionStorage.getItem('accessToken')){
+       return {
+           _id: sessionStorage.getItem('_id'),
+           accessToken: sessionStorage.getItem('accessToken'),
+       }
+   }
 
-    section.style.display = 'block';
+   return null;
 }
 
 
-export function updateNavBar(){
-    //if loggedIn user -> update welcome msg, hide login and register, show log out
-    //if NOT loggedIn user -> update welcome msg, show login and register, hide loguot
+
+export const setUserData = (data) =>{
+   sessionStorage.setItem('_id', data._id)
+   sessionStorage.setItem('accessToken', data.accessToken)
 
 
-    const user = JSON.parse(sessionStorage.getItem('user'));
 
-    const msgWelcome = document.getElementById('welcome-msg');
-
-    if(user) {
- 
-        document.querySelectorAll('.user')
-        .forEach((elem) => (elem.style.display = 'inline-block'));
-
-        document.querySelectorAll('.guest')
-        .forEach((elem) => (elem.style.display = 'none'));
-        msgWelcome.textContent = `Welcome, ${user.email}`
-
-    }else{
-       
-        document.querySelectorAll('.user')
-        .forEach((elem) => (elem.style.display = 'none'));
-
-        document.querySelectorAll('.guest')
-        .forEach((elem) => (elem.style.display = 'inline-block'));
-
-         msgWelcome.textContent = 'Welcome, email'
-    }
 }
+
+export const clearUserData = () =>{
+   sessionStorage.removeItem('_id')
+   sessionStorage.removeItem('accessToken')
+
+}
+export const createSubmitHandler = (callback) =>{
+   return function(e){
+       e.preventDefault();
+
+       const formData = new FormData(e.target);
+       const data = Object.fromEntries(formData)
+
+       callback(data, e.target)
+   }
+}
+
